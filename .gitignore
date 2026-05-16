@@ -6,6 +6,10 @@ __pycache__/
 # C extensions
 *.so
 
+#Kiro
+.kiro
+.atl
+
 # Distribution / packaging
 .Python
 build/
