@@ -1,0 +1,28 @@
+workspace:
+  x_min: 0.0
+  x_max: 2.0
+  y_min: 0.0
+  y_max: 2.0
+  z_min: 0.0
+  z_max: 2.0
+  reach_radius: 1.5
+  min_separation: 0.2
+
+worker_reference:
+  x: 0.0
+  y: 0.0
+  z: 1.0
+
+tools:
+  - name: "Llave inglesa"
+    weight_kg: 1.2
+    initial_position:
+      x: 0.5
+      y: 0.5
+      z: 0.5
+  - name: "Destornillador"
+    weight_kg: 0.3
+    initial_position:
+      x: 1.0
+      y: 0.5
+      z: 1.0

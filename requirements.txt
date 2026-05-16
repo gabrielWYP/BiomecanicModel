@@ -1,0 +1,5 @@
+scipy
+plotly
+pyyaml
+pytest
+hypothesis
