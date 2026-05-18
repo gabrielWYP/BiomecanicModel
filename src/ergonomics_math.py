@@ -7,6 +7,17 @@ import math
 from typing import Iterable
 
 
+def _layout_dicts_to_tuples(
+    layout: Iterable[dict],
+) -> list[tuple[float, float, float, float]]:
+    """Convierte un layout de dicts al formato interno de tuplas (x, y, z, weight_kg).
+
+    Cada dict debe contener las claves: x, y, z, weight_kg.
+    La clave 'name' se ignora.
+    """
+    return [(d["x"], d["y"], d["z"], d["weight_kg"]) for d in layout]
+
+
 def euclidean_distance(
     pos_a: tuple[float, float, float],
     pos_b: tuple[float, float, float],
@@ -65,14 +76,14 @@ def tool_fatigue_cost(
 
 
 def total_fatigue_cost(
-    layout: Iterable[tuple[float, float, float, float]],
+    layout: Iterable[tuple[float, float, float, float] | dict],
     worker_ref: tuple[float, float, float],
     z_min: float = 0.8,
     z_max: float = 1.2,
 ) -> float:
     """Suma de costos individuales de todas las herramientas.
 
-    layout: iterable de (x, y, z, weight_kg)
+    layout: iterable de (x, y, z, weight_kg) o dicts con claves x, y, z, weight_kg.
 
     Raises:
         ValueError: Si el layout está vacío.
@@ -80,6 +91,8 @@ def total_fatigue_cost(
     items = list(layout)
     if not items:
         raise ValueError("El layout no puede estar vacío")
+    if items and isinstance(items[0], dict):
+        items = _layout_dicts_to_tuples(items)
     return sum(
         tool_fatigue_cost(x, y, z, w, worker_ref, z_min, z_max)
         for x, y, z, w in items
@@ -87,13 +100,18 @@ def total_fatigue_cost(
 
 
 def check_separation_constraints(
-    layout: Iterable[tuple[float, float, float, float]],
+    layout: Iterable[tuple[float, float, float, float] | dict],
     min_separation: float,
 ) -> bool:
     """Retorna True si todas las distancias entre pares de herramientas
     son >= min_separation. Retorna False en caso contrario.
+
+    layout: iterable de (x, y, z, weight_kg) o dicts con claves x, y, z, weight_kg.
     """
-    positions = [(x, y, z) for x, y, z, *_ in layout]
+    items = list(layout)
+    if items and isinstance(items[0], dict):
+        items = _layout_dicts_to_tuples(items)
+    positions = [(x, y, z) for x, y, z, *_ in items]
     n = len(positions)
     for i in range(n):
         for j in range(i + 1, n):
