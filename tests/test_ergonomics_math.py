@@ -2,11 +2,6 @@
 Tests de propiedad y ejemplos para ergonomics_math.py
 """
 
-import sys
-import os
-
-sys.path.insert(0, os.path.join(os.path.dirname(__file__), ".."))
-
 from hypothesis import given, settings
 from hypothesis import strategies as st
 
